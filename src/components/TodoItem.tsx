@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { useState } from 'react';
+import { Todo } from '../contexts/TodoContext';
 
 const TodoItemLayout = styled.li`
 position: relative;
@@ -62,15 +64,21 @@ svg {
 }
 `;
 
-export default function TodoItem() {
+type TodoProps = {
+	todo :Todo;
+};
+
+export default function TodoItem({ todo }: TodoProps) {
+	const { text, date, isDone } = todo;
+
 	return (
 		<TodoItemLayout>
 			<TodoItemRow>
-				<input type='checkbox' name='isDone' id='isDone' style={{display: 'none'}}/>
+				<input type='checkbox' name='isDone' id='isDone' defaultChecked={isDone} style={{display: 'none'}}/>
 				<TodoItemCheckbox htmlFor='isDone'></TodoItemCheckbox>
-				<TodoItemInput type='text' maxLength={15} placeholder='할 일을 잊지 말자!' />
+				<TodoItemInput type='text' maxLength={15} placeholder='할 일을 잊지 말자!' value={text}/>
 			</TodoItemRow>
-			<TodoItemDateButton>오늘</TodoItemDateButton>
+			<TodoItemDateButton>{date}</TodoItemDateButton>
 			<TodoItemDeleteButton><RiDeleteBin6Line/></TodoItemDeleteButton>
 		</TodoItemLayout>
 	);

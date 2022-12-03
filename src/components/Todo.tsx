@@ -1,11 +1,14 @@
-import GlobalStyle from './GlobalStyle';
 import styled from 'styled-components';
 import { BiCategory } from 'react-icons/bi';
 import { MdChecklist } from 'react-icons/md';
 import { GoPlus } from 'react-icons/go';
 import TodoItem from './TodoItem';
 import Header from './Header';
+import { useState, useEffect } from 'react';
+import { useContext } from 'react';
+import { useTodoState, useTodoDispatch } from '../contexts/TodoContext';
 
+/** 스타일 **/
 const TodoLayout = styled.div`
   display: flex;
   flex-direction: column;
@@ -62,10 +65,11 @@ const TodoNewButton = styled.button`
   }
 `;
 
+
 export default function Todo() {
+  const todos = useTodoState();
+
   return (
-    <>
-    <GlobalStyle />
     <TodoLayout className='container'>
       <Header/>
       <TodoArticle className='list'>
@@ -75,12 +79,11 @@ export default function Todo() {
         </div>
         <TodoForm action='#'>
           <TodoList>
-            <TodoItem/>
+            {todos.map(todo => <TodoItem key={todo.id} todo={todo}/>)}
           </TodoList>
           <TodoNewButton type='button'>ADD NEW <GoPlus/></TodoNewButton>
         </TodoForm>
       </TodoArticle>
     </TodoLayout>
-    </>
   );
 }
