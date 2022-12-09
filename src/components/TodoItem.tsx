@@ -25,28 +25,6 @@ cursor: pointer;
 	transition: background-color 0.3s;
 }
 `;
-const TodoItemRow = styled.div`
-position: relative;
-display: flex;
-align-items: center;
-&.checked {
-	opacity: 0.3;
-	// &::after {
-	// 	position: absolute;
-	// 	top: 0;
-	// 	left: 0;
-	// 	display: block;
-	// 	width: 100%;
-	// 	height: 1px;
-	// 	background-color: var(--color-accent);
-	// 	content: '';
-	// }
-	${TodoItemCheckbox} {
-		border-color: var(--color-primary);
-		background-color: var(--color-primary);
-	}
-}
-`;
 const TodoItemInput = styled.input`
 min-width: 320px;
 padding: 0.2em;
@@ -75,6 +53,24 @@ resize: none;
 &:focus {
 	border-bottom: 2px solid var(--color-bg);
 	outline: none;
+}
+&:disabled {
+	background: none;
+}
+`;
+const TodoItemRow = styled.div`
+position: relative;
+display: flex;
+align-items: center;
+&.checked {
+	opacity: 0.3;
+	${TodoItemCheckbox} {
+		border-color: var(--color-primary);
+		background-color: var(--color-primary);
+	}
+	${TodoItemTextarea} {
+		text-decoration-line: line-through;
+	}
 }
 `;
 const TodoDatePickerBox = styled.div`
@@ -260,7 +256,7 @@ export default function TodoItem({ todo }: TodoProps) {
 				<TodoItemRow className={isDone ? 'checked' : ''}>
 					<input type='checkbox' id={`check${todo.id}`} style={{display: 'none'}} checked={isDone} onChange={toggleTodoCheck}/>
 					<TodoItemCheckbox htmlFor={`check${todo.id}`}></TodoItemCheckbox>
-					<TodoItemTextarea rows={1} placeholder='할 일을 작성해 보세요!' onBlur={() => updateTodoItem()} onChange={editTodoText} value={todoText} ref={textRef}/>
+					<TodoItemTextarea rows={1} placeholder='할 일을 작성해 보세요!' onBlur={() => updateTodoItem()} onChange={editTodoText} value={todoText} ref={textRef} readOnly={isDone ? true : false} disabled={isDone ? true : false}/>
 					{/* <TodoItemInput type='text' placeholder='할 일을 작성해 보세요!' onBlur={() => updateTodoItem()} onChange={editTodoText} value={todoText}/> */}
 				</TodoItemRow>
 				<TodoDatePickerBox onClick={setZindex}>
