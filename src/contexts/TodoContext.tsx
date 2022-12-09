@@ -1,25 +1,27 @@
 import { createContext, Dispatch, useReducer, useContext } from 'react';
+import styled from 'styled-components';
+import TodoList from '../components/TodoList';
 
 export type Todo = {
   id: number;
   text: string;
-  date: string;
+  date: Date;
   isDone: boolean;
 };
 export type TodoState = Todo[];
 export const tempTodo: TodoState = [{
   id: 0,
   text: '텍스트를 클릭하여 할 일을 수정하세요',
-  date: '12월 2일',
-  isDone: true,
+  date: new Date(),
+  isDone: false,
 }];
 export const TodoStateContext = createContext<TodoState | undefined>(undefined);
 
 type Action =
-| { type: 'CREATE'; text: string, date: string }
-| { type: 'UPDATE'; text: string, date: string }
+| { type: 'CREATE', date: Date; }
+| { type: 'UPDATE'; id: number, text: string, date: Date }
 | { type: 'TOGGLE'; id: number }
-| { type: 'REMOVE'; id: number } 
+| { type: 'DELETE'; id: number } 
 type TodoDispatch = Dispatch<Action>;
 export const TodoDispatchContext = createContext<TodoDispatch | undefined>(undefined);
 
@@ -38,31 +40,50 @@ export function useTodoDispatch() {
 function getTodoData() :TodoState {
 	const data = window.localStorage.getItem('todo');
 	if(data !== null) {
-		return JSON.parse(data);
+		const obj: TodoState = JSON.parse(data);
+		obj.map(v => v.date = new Date(v.date));
+		return obj;
 	} else {
 		return tempTodo;
 	}
 }
 
 function todoReducer(state: TodoState, action: Action) :TodoState {
+	let newState = state;
 	switch(action.type) {
-		case 'CREATE': { //새로운 할 일 생성
-			console.log('CREATE');
-			return state;
+		case 'CREATE': { //새로운 할 일 생성 - 수정하지 않으면 저장하지 않음
+			return [...state, {
+				id: state.length === 0 ? 0 : state[state.length - 1].id + 1,
+				text: '',
+				date: action.date,
+				isDone: false,
+			}];
+			// break;
 		}
 		case 'UPDATE': { //기존 할 일 수정
-			console.log('UPDATE');
-			return state;
+			newState = state.map(v => {
+				if(v.id === action.id) {
+					v.text = action.text;
+					v.date = action.date;
+				} return v;
+			});
+			break;
 		}
 		case 'TOGGLE': { //체크박스 토글
-			console.log('TOGGLE');
-			return state;
+			newState = state.map(v => {
+				if(v.id === action.id) {
+					v.isDone = !v.isDone;
+				} return v;
+			});
+			break;
 		}
-		case 'REMOVE': { //할 일 삭제
-			console.log('REMOVE');
-			return state;
+		case 'DELETE': { //할 일 삭제
+			newState = state.filter(v => v.id !== action.id);
+			break;
 		}
 	}
+	window.localStorage.setItem('todo', JSON.stringify(newState.filter(todo => todo.text !== ''))); //작성하지 않은 할 일 제거
+	return newState;
 }
 
 export function TodoContextProvider({ children }: { children: React.ReactNode }) {
@@ -75,4 +96,3 @@ export function TodoContextProvider({ children }: { children: React.ReactNode })
 		</TodoDispatchContext.Provider>
 	);
 }
-
