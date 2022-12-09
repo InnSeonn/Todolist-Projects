@@ -4,10 +4,11 @@ const GlobalStyle = createGlobalStyle`
 	* {
 		box-sizing: border-box;
 		font-family: inherit;
-		letter-spacing: 0.1em;
+		letter-spacing: 0.05em;
 	}
 	body {
 		margin: 0;
+		font-size: 16px;
 		font-family: 'Pretendard';
 		line-height: 1;
 	}
