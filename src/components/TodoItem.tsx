@@ -243,10 +243,13 @@ export default function TodoItem({ todo }: TodoProps) {
 		updateTodoItem(date);
 	}
 
-	/** 폼이 제출 되면(텍스트 수정 후 엔터 입력) 상태 업데이트 */
-	function submitTodoItem(e: React.FormEvent) {
-		e.preventDefault();
-		updateTodoItem();
+	function checkKeyDown(e: React.KeyboardEvent) {
+		if(e.key === 'Enter') {
+			updateTodoItem();
+			if(e.currentTarget instanceof HTMLTextAreaElement) {
+				e.currentTarget.blur();
+			}
+		}
 	}
 
 	/** DatePicker 최상단 레이어에 표시하기 */
@@ -259,11 +262,11 @@ export default function TodoItem({ todo }: TodoProps) {
 
 	return (
 		<TodoItemLayout style={{display: `${display ? 'block' : 'none'}`}}>
-			<form action='#' onSubmit={submitTodoItem}>
+			<form action='#'>
 				<TodoItemRow className={isDone ? 'checked' : ''}>
 					<input type='checkbox' id={`check${id}`} style={{display: 'none'}} checked={isDone} onChange={toggleTodoCheck}/>
 					<TodoItemCheckbox htmlFor={`check${id}`}></TodoItemCheckbox>
-					<TodoItemTextarea rows={1} placeholder='할 일을 작성해 보세요!' onBlur={() => updateTodoItem()} onChange={editTodoText} value={todoText} ref={textRef} readOnly={isDone ? true : false} disabled={isDone ? true : false}/>
+					<TodoItemTextarea rows={1} placeholder='할 일을 작성해 보세요!' onKeyDown={checkKeyDown} onBlur={() => updateTodoItem()} onChange={editTodoText} value={todoText} ref={textRef} readOnly={isDone ? true : false} disabled={isDone ? true : false}/>
 				</TodoItemRow>
 				<TodoDatePickerBox onClick={setZindex}>
 					<DatePicker selected={date} onChange={dateChangeHandler} locale={ko} disabledKeyboardNavigation
