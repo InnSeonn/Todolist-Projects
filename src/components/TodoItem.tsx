@@ -6,6 +6,7 @@ import { dateFormatter } from './dateFormatter';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useToggleState } from '../contexts/ToggleContext';
 
 //style
 const TodoItemLayout = styled.li`
@@ -175,11 +176,22 @@ type TodoProps = {
 export default function TodoItem({ todo }: TodoProps) { 
 	// const todos = useTodoState();
 	const dispatch = useTodoDispatch();
-	const inputRef = useRef<HTMLInputElement>(null);
 	const [startDate, setStartDate] = useState<Date>(todo.date);
 	const [isDone, setIsDone] = useState<boolean>(todo.isDone);
 	const [todoText, setTodoText] = useState(todo.text);
 	const textRef = useRef<HTMLTextAreaElement>(null);
+	const isShowCheckedItem = useToggleState();
+	const [display, setDisplay] = useState(isShowCheckedItem);
+
+	useEffect(() => {
+		if(isDone && isShowCheckedItem) {
+			setDisplay(true);
+		} else if(isDone && !isShowCheckedItem) {
+			setDisplay(false);
+		} else {
+			setDisplay(true);
+		}
+	}, [isShowCheckedItem]);
 
 	useEffect(() => {
 		document.fonts.ready.then(() => { //폴백 폰트와 크기 차이로 인해 scrollHeight가 정확하지 않은 문제 해결
@@ -251,8 +263,8 @@ export default function TodoItem({ todo }: TodoProps) {
 	}
 
 	return (
-		<form action='#' onSubmit={submitTodoItem}>
-			<TodoItemLayout>
+		<TodoItemLayout style={{display: `${display ? 'block' : 'none'}`}}>
+			<form action='#' onSubmit={submitTodoItem}>
 				<TodoItemRow className={isDone ? 'checked' : ''}>
 					<input type='checkbox' id={`check${todo.id}`} style={{display: 'none'}} checked={isDone} onChange={toggleTodoCheck}/>
 					<TodoItemCheckbox htmlFor={`check${todo.id}`}></TodoItemCheckbox>
@@ -265,7 +277,7 @@ export default function TodoItem({ todo }: TodoProps) {
 					</DatePicker>
 				</TodoDatePickerBox>
 				<TodoItemDeleteButton type='button' onClick={deleteTodoItem}><RiDeleteBin6Line/></TodoItemDeleteButton>
-			</TodoItemLayout>
-		</form>
+			</form>
+		</TodoItemLayout>
 	);
 }

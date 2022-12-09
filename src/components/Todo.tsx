@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import { BiCategory } from 'react-icons/bi';
-import { MdChecklist } from 'react-icons/md';
 import TodoList from './TodoList';
+import { createContext, useState, useContext } from 'react';
+import ToggleProvider, { useToggleState } from '../contexts/ToggleContext';
+import TodoToggleButton from '../components/TodoToggleButton';
 
 /** 스타일 **/
 const TodoArticle = styled.article`
@@ -15,26 +16,14 @@ const TodoArticle = styled.article`
   margin: 0 auto;
   background: #fff;
 `;
-const TodoToggleButton = styled.button`
-  margin-right: 1em;
-  color: var(--color-primary-dark);
-  font-size: var(--font-size-16);
-  opacity: 0.5;
-  svg {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-`;
 
 export default function Todo() {
-
   return (
-    <TodoArticle className='list'>
-      <div>
-        <TodoToggleButton className='filterBtn'><BiCategory/></TodoToggleButton>
-        <TodoToggleButton className='isDoneBtn'><MdChecklist/></TodoToggleButton>
-      </div>
-      <TodoList />
-    </TodoArticle>
+    <ToggleProvider>
+      <TodoArticle className='list'>
+        <TodoToggleButton />
+        <TodoList />
+      </TodoArticle>
+    </ToggleProvider>
   );
 }
