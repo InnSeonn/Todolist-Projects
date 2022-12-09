@@ -174,21 +174,21 @@ type TodoProps = {
 };
 
 export default function TodoItem({ todo }: TodoProps) { 
-	// const todos = useTodoState();
+	const todos = useTodoState();
+	const myTodo = todos.find(v => v.id === todo.id) || todo;
+	const { id, isDone, text, date } = myTodo;
 	const dispatch = useTodoDispatch();
-	const [startDate, setStartDate] = useState<Date>(todo.date);
-	const [isDone, setIsDone] = useState<boolean>(todo.isDone);
-	const [todoText, setTodoText] = useState(todo.text);
 	const textRef = useRef<HTMLTextAreaElement>(null);
+	const [todoText, setTodoText] = useState(text);
 	const isShowCheckedItem = useToggleState();
 	const [display, setDisplay] = useState(isShowCheckedItem);
 
 	useEffect(() => {
-		if(isDone && isShowCheckedItem) {
+		if(isDone && isShowCheckedItem) { //체크된 항목이고, 체크된 항목을 표시하는 경우
 			setDisplay(true);
-		} else if(isDone && !isShowCheckedItem) {
+		} else if(isDone && !isShowCheckedItem) { //체크된 항목이고, 체크된 항목을 표시하지 않는 경우
 			setDisplay(false);
-		} else {
+		} else { //체크되지 않은 항목
 			setDisplay(true);
 		}
 	}, [isShowCheckedItem]);
@@ -203,12 +203,12 @@ export default function TodoItem({ todo }: TodoProps) {
 	}, []);
 
 	/** 투두 전역 상태 업데이트 */
-	function updateTodoItem(date?: Date) {
+	function updateTodoItem(myDate?: Date) {
 		dispatch({
 			type: 'UPDATE',
-			id: todo.id,
+			id: id,
 			text: todoText || '',
-			date: date || startDate,
+			date: myDate || date,
 		});
 	}
 
@@ -226,10 +226,6 @@ export default function TodoItem({ todo }: TodoProps) {
 			type: 'TOGGLE',
 			id: todo.id,
 		});
-
-		if(e.target instanceof HTMLInputElement) {
-			setIsDone(!isDone);
-		}
 	}
 
 	/** 텍스트 수정 */
@@ -245,7 +241,6 @@ export default function TodoItem({ todo }: TodoProps) {
 	/** 날짜 변경 */
 	function dateChangeHandler(date: Date) {
 		updateTodoItem(date);
-		setStartDate(date);
 	}
 
 	/** 폼이 제출 되면(텍스트 수정 후 엔터 입력) 상태 업데이트 */
@@ -266,14 +261,13 @@ export default function TodoItem({ todo }: TodoProps) {
 		<TodoItemLayout style={{display: `${display ? 'block' : 'none'}`}}>
 			<form action='#' onSubmit={submitTodoItem}>
 				<TodoItemRow className={isDone ? 'checked' : ''}>
-					<input type='checkbox' id={`check${todo.id}`} style={{display: 'none'}} checked={isDone} onChange={toggleTodoCheck}/>
-					<TodoItemCheckbox htmlFor={`check${todo.id}`}></TodoItemCheckbox>
+					<input type='checkbox' id={`check${id}`} style={{display: 'none'}} checked={isDone} onChange={toggleTodoCheck}/>
+					<TodoItemCheckbox htmlFor={`check${id}`}></TodoItemCheckbox>
 					<TodoItemTextarea rows={1} placeholder='할 일을 작성해 보세요!' onBlur={() => updateTodoItem()} onChange={editTodoText} value={todoText} ref={textRef} readOnly={isDone ? true : false} disabled={isDone ? true : false}/>
-					{/* <TodoItemInput type='text' placeholder='할 일을 작성해 보세요!' onBlur={() => updateTodoItem()} onChange={editTodoText} value={todoText}/> */}
 				</TodoItemRow>
 				<TodoDatePickerBox onClick={setZindex}>
-					<DatePicker selected={todo.date} onChange={dateChangeHandler} locale={ko} disabledKeyboardNavigation
-						customInput={<TodoItemDateButton type='button'>{dateFormatter(startDate)}</TodoItemDateButton>}>
+					<DatePicker selected={date} onChange={dateChangeHandler} locale={ko} disabledKeyboardNavigation
+						customInput={<TodoItemDateButton type='button'>{dateFormatter(date)}</TodoItemDateButton>}>
 					</DatePicker>
 				</TodoDatePickerBox>
 				<TodoItemDeleteButton type='button' onClick={deleteTodoItem}><RiDeleteBin6Line/></TodoItemDeleteButton>
