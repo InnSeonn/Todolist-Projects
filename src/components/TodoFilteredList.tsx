@@ -2,8 +2,11 @@ import { useTodoState } from '../contexts/TodoContext';
 import { getDaysPassed } from './dateFormatter';
 import TodoItem from './TodoItem';
 import styled from 'styled-components';
+import { useToggleState } from '../contexts/ToggleContext';
+import { useEffect } from 'react';
 
-const FilteredListBox = styled.div`
+const FilteredListBox = styled.div<{display?: string}>`
+	display: ${(props) => props.display || 'block'};
 	margin-bottom: 4em;
 	&:last-child {
 		margin-bottom: 0;
@@ -17,6 +20,18 @@ const FilteredListTitle = styled.h2`
 
 export default function TodoFilteredList() {
 	const todos = useTodoState();
+	const toggle = useToggleState();
+
+	useEffect(() => {
+		const parents = document.querySelectorAll(FilteredListBox) as NodeListOf<HTMLElement>;
+		[...parents].map(parent => {
+			if(!parent.querySelector('li')) {
+				parent.style.display = 'none';
+			} else {
+				parent.style.display = 'block';
+			}
+		});
+	}, [todos]);
 
 	return (
 		<div style={{marginTop: '3em'}}>
@@ -50,7 +65,7 @@ export default function TodoFilteredList() {
 						})}
 				</ul>
 			</FilteredListBox>
-			<FilteredListBox>
+			<FilteredListBox display={toggle.checked ? 'block' : 'none'}>
 				<FilteredListTitle>완료된</FilteredListTitle>
 				<ul>
 					{todos.map(todo => {
