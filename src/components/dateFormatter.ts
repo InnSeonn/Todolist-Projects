@@ -1,7 +1,11 @@
+export function getDaysPassed(date: Date) {
+	return Math.ceil((date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+}
+
 export function dateFormatter(selectedDate: Date): string {
 	const formatter = new Intl.RelativeTimeFormat('ko', { numeric: 'auto'});
 	const today = new Date();
-	const daysPassed = Math.ceil((selectedDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+	const daysPassed = getDaysPassed(selectedDate);
 
 	let formatted = '';
 	if(Math.abs(daysPassed) > 7) { //7일 전(후)부터는 날짜로 표시
