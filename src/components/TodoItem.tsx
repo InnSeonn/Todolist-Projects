@@ -185,18 +185,18 @@ export default function TodoItem({ todo }: TodoProps) {
 	const dispatch = useTodoDispatch();
 	const textRef = useRef<HTMLTextAreaElement>(null);
 	const [todoText, setTodoText] = useState(text);
-	const isShowCheckedItem = useToggleState();
-	const [display, setDisplay] = useState(isShowCheckedItem);
+	const toggle = useToggleState();
+	const [display, setDisplay] = useState(toggle.checked);
 
 	useEffect(() => {
-		if(isDone && isShowCheckedItem) { //체크된 항목이고, 체크된 항목을 표시하는 경우
+		if(isDone && toggle.checked) { //체크된 항목이고, 체크된 항목을 표시하는 경우
 			setDisplay(true);
-		} else if(isDone && !isShowCheckedItem) { //체크된 항목이고, 체크된 항목을 표시하지 않는 경우
+		} else if(isDone && !toggle.checked) { //체크된 항목이고, 체크된 항목을 표시하지 않는 경우
 			setDisplay(false);
 		} else { //체크되지 않은 항목
 			setDisplay(true);
 		}
-	}, [isShowCheckedItem]);
+	}, [toggle.checked]);
 
 	useEffect(() => {
 		document.fonts.ready.then(() => { //폴백 폰트와 크기 차이로 인해 scrollHeight가 정확하지 않은 문제 해결

@@ -3,6 +3,7 @@ import TodoList from './TodoList';
 import { createContext, useState, useContext } from 'react';
 import ToggleProvider, { useToggleState } from '../contexts/ToggleContext';
 import TodoToggleButton from '../components/TodoToggleButton';
+import TodoFilteredList from './TodoFilteredList';
 
 /** 스타일 **/
 const TodoArticle = styled.article`
@@ -18,12 +19,15 @@ const TodoArticle = styled.article`
 `;
 
 export default function Todo() {
+  const toggle = useToggleState();
+  console.log(toggle);
+
   return (
-    <ToggleProvider>
+    // <ToggleProvider>
       <TodoArticle className='list'>
         <TodoToggleButton />
-        <TodoList />
+        {toggle.filter ? <TodoFilteredList /> : <TodoList />}
       </TodoArticle>
-    </ToggleProvider>
+    // </ToggleProvider>
   );
 }

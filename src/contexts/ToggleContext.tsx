@@ -1,8 +1,19 @@
-import { createContext, Dispatch, useState, useContext } from 'react';
+import { createContext, Dispatch, useState, useContext, useReducer } from 'react';
 
-export const ToggleContext = createContext<boolean>(true);
+type ToggleState = {
+	filter: boolean,
+	checked: boolean,
+};
 
-type toggleDispatch = Dispatch<boolean>
+export const ToggleContext = createContext<ToggleState>({
+	filter: true,
+	checked: true,
+});
+
+type Action = 
+| { type: 'FILTER', toggle: boolean }
+| { type: 'CHECKED', toggle: boolean}
+type toggleDispatch = Dispatch<Action>
 export const ToggleDispatchContext = createContext<toggleDispatch | undefined>(undefined);
 
 export function useToggleState() {
@@ -16,12 +27,31 @@ export function useToggleDispatch() {
 	return dispatch;
 }
 
+function toggleReducer(state: ToggleState, action: Action) :ToggleState {
+	switch(action.type) {
+		case 'FILTER':
+			return {
+				filter: action.toggle,
+				checked: state.checked,
+			};
+		case 'CHECKED':
+			return {
+				filter: state.filter,
+				checked: action.toggle,
+			};
+	}
+}
+
 export default function ToggleProvider({children}: {children: React.ReactNode}) {
-	const [isShowCheckedItem, dispatch] = useState(true);
+	// const [toggle, dispatch] = useState(true);
+	const [toggle, dispatch] = useReducer(toggleReducer, {
+		filter: true,
+		checked: true,
+	});
 
 	return (
 		<ToggleDispatchContext.Provider value={dispatch}>
-			<ToggleContext.Provider value = {isShowCheckedItem}>
+			<ToggleContext.Provider value = {toggle}>
 				{children}
 			</ToggleContext.Provider>
 		</ToggleDispatchContext.Provider>
