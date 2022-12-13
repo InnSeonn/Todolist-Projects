@@ -205,7 +205,7 @@ export default function TodoItem({ todo }: TodoProps) {
 				textRef.current.style.height = textRef.current.scrollHeight + 'px';
 			}
 		});
-	}, []);
+	}, [display]);
 
 	/** 투두 전역 상태 업데이트 */
 	function updateTodoItem(myDate?: Date) {

@@ -12,6 +12,10 @@ function getSortedTodos(todos: TodoState) {
 	[...daysPassed].sort((a, b) => Number(a) - Number(b)).map(dp => {
 		sorted = [...sorted, ...todos.filter(v => getDaysPassed(v.date) === dp)];
 	});
+
+	//완료되지 않은 할 일 → 완료된 할일순으로 정렬
+	sorted = [...sorted.filter(todo => todo.isDone === false), ...sorted.filter(todo => todo.isDone === true)];
+
 	return sorted;
 }
 
