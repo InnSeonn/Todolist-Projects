@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import React, { useRef, useState, useEffect } from 'react';
 import { Todo, useTodoDispatch, useTodoState } from '../contexts/TodoContext';
@@ -145,9 +145,14 @@ const TodoDatePickerBox = styled.div`
 const TodoItemDateButton = styled.button`
 	color: var(--color-grey-light);
 	font-size: var(--font-size-14);
+	cursor: auto;
+	
 	&:hover {
-		color: var(--color-primary-dark);
-		transition: color 0.3s;
+		${(props) => props.disabled === false && css`
+			color: var(--color-primary-dark);
+			transition: color 0.3s;
+			cursor: pointer;
+		`}
 	}
 `;
 const TodoItemDeleteButton = styled.button`
@@ -270,7 +275,7 @@ export default function TodoItem({ todo }: TodoProps) {
 				</TodoItemRow>
 				<TodoDatePickerBox onClick={setZindex}>
 					<DatePicker selected={date} onChange={dateChangeHandler} locale={ko} disabledKeyboardNavigation
-						customInput={<TodoItemDateButton type='button'>{dateFormatter(date)}</TodoItemDateButton>}>
+						customInput={<TodoItemDateButton type='button'>{dateFormatter(date)}</TodoItemDateButton>} disabled={isDone ? true : false}>
 					</DatePicker>
 				</TodoDatePickerBox>
 				<TodoItemDeleteButton type='button' onClick={deleteTodoItem}><RiDeleteBin6Line/></TodoItemDeleteButton>
