@@ -31,10 +31,10 @@ export default function TodoFilteredList() {
 				parent.style.display = 'block';
 			}
 		});
-	}, [todos]);
+	}, [todos, toggle]);
 
 	return (
-		<div style={{marginTop: '3em'}}>
+		<div style={{marginTop: '2em'}}>
 			<FilteredListBox>
 				<FilteredListTitle>오늘</FilteredListTitle>
 				<ul>
