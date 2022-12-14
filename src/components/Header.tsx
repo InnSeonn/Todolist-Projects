@@ -75,7 +75,7 @@ export default function Header() {
 	return (
 		<HeaderLayout className='header'>
 			<HeaderForm action='#' onSubmit={updateTitle}>
-				<HeaderInput type='text' placeholder='할 일을 미루지 말자' maxLength={MAXLENGHT} ref={textRef} onChange={editTitle} onBlur={updateTitle} onKeyDown={checkKeyDown} value={title}/>
+				<HeaderInput type='text' placeholder='할 일을 미루지 말자' maxLength={MAXLENGHT} ref={textRef} onChange={editTitle} onBlur={updateTitle} onKeyDown={checkKeyDown} value={title} spellCheck={false}/>
 			</HeaderForm>
 		</HeaderLayout>
 	);
