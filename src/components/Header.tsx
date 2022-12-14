@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { useRef, useState } from 'react';
 
 const HeaderLayout = styled.header`
@@ -10,16 +10,28 @@ const HeaderLayout = styled.header`
 const HeaderForm = styled.form`
 	background-color: var(--color-primary);
 `;
+const vibration = keyframes`
+	0% {
+		transform: rotate(1deg);
+	}
+	100% {
+		tranform: rotate(-1deg);
+	}
+`;
 const HeaderInput = styled.input`
-	max-width: 300px;
+	width: 100%;
 	padding: 0.8em;
 	color: #fff;
-	font-size: var(--font-size-18);
+	font-size: var(--font-size-16);
 	font-weight: 600;
 	text-align: center;
 	&::placeholder {
 		color: #fff;
 		opacity: 0.5;
+	}
+	&.error {
+		color: #f44336;
+		animation: ${vibration} 0.1s 3;
 	}
 `;
 
@@ -30,6 +42,7 @@ function getTitle(): string {
 		return '';
 	}
 }
+const MAXLENGHT = 25;
 
 export default function Header() {
 	const textRef = useRef<HTMLInputElement>(null);
@@ -37,6 +50,12 @@ export default function Header() {
 
 	function editTitle() {
 		if(textRef.current !== null) {
+			//제목이 25자가 넘어가면 에러 표시
+			if(textRef.current.value.length >= MAXLENGHT) {
+				textRef.current.classList.add('error');
+				setTimeout(() => textRef.current?.classList.remove('error'), 300);
+				return ;
+			}
 			setTitle(textRef.current.value);
 		}
 	}
@@ -57,7 +76,7 @@ export default function Header() {
 	return (
 		<HeaderLayout className='header'>
 			<HeaderForm action='#' onSubmit={updateTitle}>
-				<HeaderInput type='text' placeholder='2022년 12월에 해야 할 일들' maxLength={15} ref={textRef} onChange={editTitle} onBlur={updateTitle} value={title} onKeyDown={checkKeyDown}/>
+				<HeaderInput type='text' placeholder='할 일을 미루지 말자' maxLength={MAXLENGHT} ref={textRef} onChange={editTitle} onBlur={updateTitle} onKeyDown={checkKeyDown} value={title}/>
 			</HeaderForm>
 		</HeaderLayout>
 	);
