@@ -10,81 +10,84 @@ import { useToggleState } from '../contexts/ToggleContext';
 
 //style
 const TodoItemLayout = styled.li`
-position: relative;
-margin: 0.5em 0;
+	position: relative;
+	margin-top: 1.5em;
+	@media screen and (min-width: 768px) {
+		margin-top: 0.5em;
+	}
+`;
+const TodoItemForm = styled.form`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	@media screen and (min-width: 768px) {
+		flex-wrap: nowrap;
+	}
 `;
 const TodoItemCheckbox = styled.label`
-display: block;
-width: 0.875rem;
-height: 0.875rem;
-margin-right: 0.5rem;
-border-radius: 50%;
-border: 1px solid var(--color-grey-light);
-cursor: pointer;
-&:hover {
-	background-color: var(--color-primary);
-	transition: background-color 0.3s;
-}
-`;
-const TodoItemInput = styled.input`
-min-width: 320px;
-padding: 0.2em;
-color: var(--color-primary-dark);
-font-size: var(--font-size-16);
-font-weight: 500;
-&::placeholder {
-	color: var(--color-grey-light);
-}
+	display: block;
+	width: 0.875rem;
+	height: 0.875rem;
+	margin-right: 0.5rem;
+	border-radius: 50%;
+	border: 1px solid var(--color-grey-light);
+	cursor: pointer;
+	&:hover {
+		background-color: var(--color-primary);
+		transition: background-color 0.3s;
+	}
 `;
 const TodoItemTextarea = styled.textarea`
-overflow: hidden;
-max-width: 16.875rem;
-width: 100%;
-padding: 0.2em;
-border: none;
-color: var(--color-primary-dark);
-font-size: var(--font-size-16);
-font-variation-settings: 'wght' 510;
-line-height: 1.5;
-word-break: break-all;
-resize: none;
-&::placeholder {
-	color: var(--color-grey-light);
-}
-&:focus {
-	border-bottom: 2px solid var(--color-bg);
-	outline: none;
-}
-&:disabled {
-	background: none;
-}
+	overflow: hidden;
+	flex: 1;
+	padding: 0.2em;
+	border: none;
+	color: var(--color-primary-dark);
+	font-size: var(--font-size-16);
+	font-variation-settings: 'wght' 510;
+	line-height: 1.5;
+	word-break: break-all;
+	resize: none;
+	&::placeholder {
+		color: var(--color-grey-light);
+	}
+	&:focus {
+		border-bottom: 2px solid var(--color-bg);
+		outline: none;
+	}
+	&:disabled {
+		background: none;
+	}
 `;
 const TodoItemRow = styled.div`
-position: relative;
-display: flex;
-align-items: center;
-&.checked {
-	opacity: 0.3;
-	${TodoItemCheckbox} {
-		border-color: var(--color-primary);
-		background-color: var(--color-primary);
-	}
-	${TodoItemTextarea} {
-		text-decoration-line: line-through;
-	}
-}
-`;
-const TodoDatePickerBox = styled.div`
-	position: absolute;
-	top: 0;
-	right: 0;
+	position: relative;
+	flex: 1;
 	display: flex;
 	align-items: center;
-	height: 100%;
-	transform: translateX(-2.5em);
+	&.checked {
+		opacity: 0.3;
+		${TodoItemCheckbox} {
+			border-color: var(--color-primary);
+			background-color: var(--color-primary);
+		}
+		${TodoItemTextarea} {
+			text-decoration-line: line-through;
+		}
+	}
+`;
+const TodoDatePickerBox = styled.div`
+	width: 100%;
+	margin-top: 0.2em;
+	margin-left: 1.475rem;
 	z-index: 1;
 	&.focus {
 		z-index: 999;
+	}
+	@media screen and (min-width: 768px) {
+		width: 10em;
+		margin: 0;
+		text-align: right;
 	}
 
 	.react-datepicker {
@@ -156,21 +159,25 @@ const TodoItemDateButton = styled.button`
 	}
 `;
 const TodoItemDeleteButton = styled.button`
-	position: absolute;
-	top: 0;
-	right: 0;
-	height: 100%;
-	color: var(--color-grey-light);
 	display: flex;
+	justify-content: flex-end;
 	align-items: center;
+	width: 2em;
+	height: 100%;
+	margin-left: 3em;
+	color: var(--color-grey-light);
 	&:hover {
 		color: var(--color-accent-light);
 		transition: color 0.3s;
-}
-svg {
-	width: 1.25rem;
-	height: 1.25rem;
-}
+	}
+	svg {
+		width: 1.25rem;
+		height: 1.25rem;
+	}
+	@media screen and (min-width: 768px) {
+		order: 3;
+		margin-left: 1.4em;
+	}
 `;
 
 //ts
@@ -267,19 +274,19 @@ export default function TodoItem({ todo }: TodoProps) {
 
 	return (
 		<TodoItemLayout style={{display: `${display ? 'block' : 'none'}`}}>
-			<form action='#'>
+			<TodoItemForm action='#'>
 				<TodoItemRow className={isDone ? 'checked' : ''}>
 					<input type='checkbox' id={`check${id}`} style={{display: 'none'}} checked={isDone} onChange={toggleTodoCheck}/>
 					<TodoItemCheckbox htmlFor={`check${id}`}></TodoItemCheckbox>
 					<TodoItemTextarea rows={1} placeholder='할 일을 작성해 보세요!' onKeyDown={checkKeyDown} onBlur={() => updateTodoItem()} onChange={editTodoText} value={todoText} ref={textRef} readOnly={isDone ? true : false} disabled={isDone ? true : false}/>
 				</TodoItemRow>
+				<TodoItemDeleteButton type='button' onClick={deleteTodoItem}><RiDeleteBin6Line/></TodoItemDeleteButton>
 				<TodoDatePickerBox onClick={setZindex}>
 					<DatePicker selected={date} onChange={dateChangeHandler} locale={ko} disabledKeyboardNavigation
 						customInput={<TodoItemDateButton type='button'>{dateFormatter(date)}</TodoItemDateButton>} disabled={isDone ? true : false}>
 					</DatePicker>
 				</TodoDatePickerBox>
-				<TodoItemDeleteButton type='button' onClick={deleteTodoItem}><RiDeleteBin6Line/></TodoItemDeleteButton>
-			</form>
+			</TodoItemForm>
 		</TodoItemLayout>
 	);
 }

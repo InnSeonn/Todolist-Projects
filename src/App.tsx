@@ -15,15 +15,24 @@ const AppLayout = styled.div`
   width: 100%;
   min-height: 100vh;
   height: 100%;
-  padding: 6.25rem 20px;
   background-color: var(--color-bg);
+  transition: padding 0.3s;
+  @media screen and (min-width: 500px) {
+    padding: 20px;
+  }
+  @media screen and (min-width: 768px) {
+    padding: 50px 20px;
+  }
+  @media screen and (min-width: 992px) {
+    padding: 100px 20px;
+  }
 `;
 
 function App() {
   return (
     <div className='App'>
       <GlobalStyle />
-      <AppLayout className='container'>
+      <AppLayout>
         <Header/>
         <TodoContextProvider>
           <ToggleProvider>

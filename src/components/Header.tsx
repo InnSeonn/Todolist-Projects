@@ -4,7 +4,6 @@ import { useRef, useState } from 'react';
 const HeaderLayout = styled.header`
 	max-width: var(--max-width);
 	width: 100%;
-	padding-bottom: 1em;
 	text-align: center;
 `;
 const HeaderForm = styled.form`
