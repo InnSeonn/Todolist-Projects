@@ -65,16 +65,18 @@ export default function TodoFilteredList() {
 						})}
 				</ul>
 			</FilteredListBox>
-			<FilteredListBox display={toggle.checked ? 'block' : 'none'}>
-				<FilteredListTitle>완료된</FilteredListTitle>
-				<ul>
-					{todos.map(todo => {
-						if(todo.isDone) {
-							return <TodoItem todo={todo} key={todo.id}></TodoItem>
-						}
-					})}
-				</ul>
-			</FilteredListBox>
+			{toggle.checked &&
+				<FilteredListBox>
+					<FilteredListTitle>완료된</FilteredListTitle>
+					<ul>
+						{todos.map(todo => {
+							if(todo.isDone) {
+								return <TodoItem todo={todo} key={todo.id}></TodoItem>
+							}
+						})}
+					</ul>
+				</FilteredListBox>
+			}
 		</div>
 	);
 }
