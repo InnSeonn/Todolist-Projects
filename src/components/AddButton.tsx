@@ -5,8 +5,6 @@ import { useNewTodoState } from '../contexts/NewTodoContext';
 import { TodoItemLayout } from './TodoItem';
 
 const Button = styled.button`
-  // position: fixed;
-  // bottom: 20px;
   position: relative;
   bottom: 0;
   display: flex;
@@ -26,7 +24,7 @@ export default function AddButton() {
 	const todos = useTodoState();
 	const dispatch = useTodoDispatch();
   const newTodo = useNewTodoState();
-
+  
 	function addNewTodoItem() {
     if(newTodo.isNew > 0) { //새로운 할 일이 이미 추가 되어있는 상태
       const todoItems = [...document.querySelectorAll(TodoItemLayout)] as HTMLElement[];

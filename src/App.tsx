@@ -9,31 +9,37 @@ import ToggleProvider from './contexts/ToggleContext';
 import { NewTodoContextProvider } from './contexts/NewTodoContext';
 
 const AppLayout = styled.div`
+  overflow: hidden;
+  height: 100vh;
+`;
+const AppBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  min-height: 100vh;
   height: 100%;
-  background-color: var(--color-bg);
   transition: padding 0.3s;
   @media screen and (min-width: 500px) {
     padding: 20px;
+    padding-bottom: 0;
+    background-color: var(--color-bg);
   }
   @media screen and (min-width: 768px) {
     padding: 50px 20px;
+    padding-bottom: 30px;
   }
   @media screen and (min-width: 992px) {
     padding: 100px 20px;
+    padding-bottom: 80px;
   }
 `;
 
 function App() {
   return (
-    <div className='App'>
+    <AppLayout className='App'>
       <GlobalStyle />
-      <AppLayout>
+      <AppBox>
         <Header/>
         <TodoContextProvider>
           <NewTodoContextProvider>
@@ -43,8 +49,8 @@ function App() {
             <AddButton />
           </NewTodoContextProvider>
         </TodoContextProvider>
-      </AppLayout>
-    </div>
+      </AppBox>
+    </AppLayout>
   );
 }
 

@@ -52,11 +52,13 @@ const TodoItemCheckbox = styled.label`
 const TodoItemTextarea = styled.textarea`
 	overflow: hidden;
 	flex: 1;
+	width: 100%;
 	padding: 0.2em;
 	border: none;
 	color: var(--color-primary-dark);
 	font-size: var(--font-size-16);
-	font-variation-settings: 'wght' 510;
+	font-weight: 510;
+	// font-variation-settings: 'wght' 510;
 	line-height: 1.5;
 	word-break: break-all;
 	resize: none;

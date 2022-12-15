@@ -5,9 +5,27 @@ import styled from 'styled-components';
 import { useToggleState } from '../contexts/ToggleContext';
 import { useEffect } from 'react';
 
+export const ScrollLayout = styled.div`
+  overflow: auto;
+	padding-right: 1.5em;
+	margin-top: 2em;
+	&::-webkit-scrollbar {
+		width: 4px;
+		height: 4px;
+
+		&-track {
+			border-radius: 4px;
+			background-color: rgba(227, 233, 255, 0.5);
+		}
+		&-thumb {
+			border-radius: 4px;
+			background-color: rgb(175, 126, 234, 0.5);
+		}
+	}
+`;
 const FilteredListBox = styled.div<{display?: string}>`
 	display: ${(props) => props.display || 'block'};
-	margin-bottom: 4em;
+	margin-bottom: 3em;
 	&:last-child {
 		margin-bottom: 0;
 	}
@@ -34,7 +52,7 @@ export default function TodoFilteredList() {
 	}, [todos, toggle]);
 
 	return (
-		<div style={{marginTop: '2em'}}>
+		<ScrollLayout>
 			<FilteredListBox>
 				<FilteredListTitle>오늘</FilteredListTitle>
 				<ul>
@@ -77,6 +95,6 @@ export default function TodoFilteredList() {
 					</ul>
 				</FilteredListBox>
 			}
-		</div>
+		</ScrollLayout>
 	);
 }

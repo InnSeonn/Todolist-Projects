@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import TodoItem from './TodoItem';
 import { TodoState, useTodoState } from '../contexts/TodoContext';
 import { getDaysPassed } from './dateFormatter';
+import { ScrollLayout } from './TodoFilteredList';
 
 function getSortedTodos(todos: TodoState) {
 	let daysPassed = new Set();
@@ -23,8 +24,8 @@ export default function TodoList() {
 	const todos = getSortedTodos(useTodoState());
 	
 	return (
-		<ul style={{marginTop: '2em'}}>
+		<ScrollLayout as='ul'>
 			{todos.map(todo => <TodoItem todo={todo} key={todo.id}/>)}
-		</ul>
+		</ScrollLayout>
 	);
 }
