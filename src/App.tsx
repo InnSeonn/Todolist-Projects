@@ -6,6 +6,7 @@ import { TodoContextProvider } from './contexts/TodoContext';
 import Header from './components/Header';
 import AddButton from './components/AddButton';
 import ToggleProvider from './contexts/ToggleContext';
+import { NewTodoContextProvider } from './contexts/NewTodoContext';
 
 const AppLayout = styled.div`
   display: flex;
@@ -35,10 +36,12 @@ function App() {
       <AppLayout>
         <Header/>
         <TodoContextProvider>
-          <ToggleProvider>
-            <Todo/>
-          </ToggleProvider>
-          <AddButton />
+          <NewTodoContextProvider>
+            <ToggleProvider>
+              <Todo/>
+            </ToggleProvider>
+            <AddButton />
+          </NewTodoContextProvider>
         </TodoContextProvider>
       </AppLayout>
     </div>

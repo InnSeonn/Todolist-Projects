@@ -9,7 +9,7 @@ const HeaderLayout = styled.header`
 const HeaderForm = styled.form`
 	background-color: var(--color-primary);
 `;
-const vibration = keyframes`
+export const vibration = keyframes`
 	0% {
 		transform: rotate(1deg);
 	}

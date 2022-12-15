@@ -7,11 +7,22 @@ import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useToggleState } from '../contexts/ToggleContext';
+import { useNewTodoState } from '../contexts/NewTodoContext';
+import { vibration } from './Header';
 
 //style
-const TodoItemLayout = styled.li`
+export const TodoItemLayout = styled.li`
 	position: relative;
 	margin-top: 1.5em;
+	&.error {
+		animation: ${vibration} 0.1s 3;
+		textarea {
+			color: #f44336;
+			&::placeholder {
+				color: #f44336;
+			}
+		}
+	}
 	@media screen and (min-width: 768px) {
 		margin-top: 0.5em;
 	}
@@ -194,7 +205,9 @@ export default function TodoItem({ todo }: TodoProps) {
 	const [todoText, setTodoText] = useState(text);
 	const toggle = useToggleState();
 	const [display, setDisplay] = useState(toggle.checked);
-
+	const newTodo = useNewTodoState();
+	
+	/* 토글 버튼 활성화 체크 */
 	useEffect(() => {
 		if(isDone && toggle.checked) { //체크된 항목이고, 체크된 항목을 표시하는 경우
 			setDisplay(true);
@@ -205,6 +218,7 @@ export default function TodoItem({ todo }: TodoProps) {
 		}
 	}, [toggle.checked]);
 
+	/* 할 일 텍스트 입력창 높이 설정 */
 	useEffect(() => {
 		document.fonts.ready.then(() => { //폴백 폰트와 크기 차이로 인해 scrollHeight가 정확하지 않은 문제 해결
 			if(textRef.current !== null) {
@@ -213,6 +227,13 @@ export default function TodoItem({ todo }: TodoProps) {
 			}
 		});
 	}, [display]);
+
+	/* 새로운 할 일인지 체크 */
+	useEffect(() => {
+		if(newTodo.isNew === id) {
+			textRef.current?.focus();
+		} 
+	}, [newTodo]);
 
 	/** 투두 전역 상태 업데이트 */
 	function updateTodoItem(myDate?: Date) {
@@ -230,6 +251,10 @@ export default function TodoItem({ todo }: TodoProps) {
 			type: 'DELETE',
 			id: todo.id,
 		});
+
+		if(newTodo.isNew === id) {
+			newTodo.setIsNew(-1);
+		}
 	}
 
 	/** 체크 박스 토글 */
@@ -255,11 +280,24 @@ export default function TodoItem({ todo }: TodoProps) {
 		updateTodoItem(date);
 	}
 
+	/** 엔터 키 입력 체크 */
 	function checkKeyDown(e: React.KeyboardEvent) {
-		if(e.key === 'Enter') {
+		if(e.key !== 'Enter') {
+			return ;
+		}
+
+		textRef.current?.blur();
+		checkEditedText();
+	}
+
+	/** 할 일이 수정되었는지 확인 */
+	function checkEditedText() {
+		if(textRef.current?.value === '' || textRef.current?.value === text) {
+			return ;
+		} else {
 			updateTodoItem();
-			if(e.currentTarget instanceof HTMLTextAreaElement) {
-				e.currentTarget.blur();
+			if(newTodo.isNew > 0 && newTodo.isNew === id) {
+				newTodo.setIsNew(-1);
 			}
 		}
 	}
@@ -273,12 +311,12 @@ export default function TodoItem({ todo }: TodoProps) {
 	}
 
 	return (
-		<TodoItemLayout style={{display: `${display ? 'block' : 'none'}`}}>
+		<TodoItemLayout data-id={id} style={{display: `${display ? 'block' : 'none'}`}}>
 			<TodoItemForm action='#'>
 				<TodoItemRow className={isDone ? 'checked' : ''}>
 					<input type='checkbox' id={`check${id}`} style={{display: 'none'}} checked={isDone} onChange={toggleTodoCheck}/>
 					<TodoItemCheckbox htmlFor={`check${id}`}></TodoItemCheckbox>
-					<TodoItemTextarea rows={1} placeholder='할 일을 작성해 보세요!' onKeyDown={checkKeyDown} onBlur={() => updateTodoItem()} onChange={editTodoText} value={todoText} ref={textRef} readOnly={isDone ? true : false} disabled={isDone ? true : false} spellCheck={false}/>
+					<TodoItemTextarea rows={1} placeholder='할 일을 작성해 보세요!' onKeyDown={checkKeyDown} onBlur={checkEditedText} onChange={editTodoText} value={todoText} ref={textRef} readOnly={isDone ? true : false} disabled={isDone ? true : false} spellCheck={false}/>
 				</TodoItemRow>
 				<TodoItemDeleteButton type='button' onClick={deleteTodoItem}><RiDeleteBin6Line/></TodoItemDeleteButton>
 				<TodoDatePickerBox onClick={setZindex}>
