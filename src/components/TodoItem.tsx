@@ -148,21 +148,8 @@ export default function TodoItem({ todo }: TodoProps) {
 	const dispatch = useTodoDispatch();
 	const textRef = useRef<HTMLTextAreaElement>(null);
 	const [todoText, setTodoText] = useState(text);
-	const toggle = useToggleState();
-	const [display, setDisplay] = useState(toggle.checked);
 	const newTodo = useNewTodoState();
 	const [windowWidth, setWindowWidth] = useState(0);
-
-	/* 토글 버튼 활성화 체크 */
-	useEffect(() => {
-		if(isDone && toggle.checked) { //체크된 항목이고, 체크된 항목을 표시하는 경우
-			setDisplay(true);
-		} else if(isDone && !toggle.checked) { //체크된 항목이고, 체크된 항목을 표시하지 않는 경우
-			setDisplay(false);
-		} else { //체크되지 않은 항목
-			setDisplay(true);
-		}
-	}, [toggle.checked]);
 
 	/* window resize 이벤트 리스너 등록 */
 	useEffect(() => {
@@ -177,7 +164,7 @@ export default function TodoItem({ todo }: TodoProps) {
 				textRef.current.style.height = textRef.current.scrollHeight + 'px';
 			}
 		});
-	}, [display, windowWidth]);
+	}, [windowWidth]);
 
 	/* 새로운 할 일인지 체크 */
 	useEffect(() => {
@@ -254,7 +241,7 @@ export default function TodoItem({ todo }: TodoProps) {
 	}
 
 	return (
-		<TodoItemLayout data-id={id} style={{display: `${display ? 'block' : 'none'}`}}>
+		<TodoItemLayout data-id={id}>
 			<TodoItemForm action='#'>
 				<TodoItemRow className={isDone ? 'checked' : ''}>
 					<input type='checkbox' id={`check${id}`} style={{display: 'none'}} checked={isDone} onChange={toggleTodoCheck}/>

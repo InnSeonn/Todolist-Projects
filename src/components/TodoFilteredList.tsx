@@ -1,100 +1,81 @@
-import { useTodoState } from '../contexts/TodoContext';
+import { useTodoState, TodoState } from '../contexts/TodoContext';
 import { getDaysPassed } from './dateFormatter';
 import TodoItem from './TodoItem';
 import styled from 'styled-components';
 import { useToggleState } from '../contexts/ToggleContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { TodoListLayout, TodoListBox, TodoListTitle } from './TodoList';
 
-export const ScrollLayout = styled.div`
-  overflow: auto;
-	padding-right: 1.5em;
-	margin-top: 2em;
-	&::-webkit-scrollbar {
-		width: 4px;
-		height: 4px;
-
-		&-track {
-			border-radius: 4px;
-			background-color: rgba(227, 233, 255, 0.5);
-		}
-		&-thumb {
-			border-radius: 4px;
-			background-color: rgb(175, 126, 234, 0.5);
-		}
-	}
-`;
-const FilteredListBox = styled.div<{display?: string}>`
+const FilteredListBox = styled(TodoListBox)<{display?: string}>`
 	display: ${(props) => props.display || 'block'};
-	margin-bottom: 3em;
-	&:last-child {
-		margin-bottom: 0;
-	}
-`;
-const FilteredListTitle = styled.h2`
-	color: var(--color-accent-light);
-	font-size: var(--font-size-14);
-	font-weight: 700;
 `;
 
 export default function TodoFilteredList() {
 	const todos = useTodoState();
 	const toggle = useToggleState();
 
-	useEffect(() => {
-		const parents = document.querySelectorAll(FilteredListBox) as NodeListOf<HTMLElement>;
-		[...parents].map(parent => {
-			if(!parent.querySelector('li')) {
-				parent.style.display = 'none';
-			} else {
-				parent.style.display = 'block';
+	function getTargetTodos(target: string): TodoState | null {
+		let targetTodos: TodoState = [];
+		switch(target) {
+			case 'TODAY': {
+				targetTodos = todos.filter(todo => !todo.isDone && getDaysPassed(new Date()) === getDaysPassed(todo.date));
+				break;
 			}
-		});
-	}, [todos, toggle]);
+			case 'NEXT': {
+				targetTodos = todos.filter(todo => !todo.isDone && getDaysPassed(todo.date) > 0);
+				break;
+			}
+			case 'PASSED': {
+				targetTodos = todos.filter(todo => !todo.isDone && getDaysPassed(todo.date) < 0);
+				break;
+			}
+			case 'DONE': {
+				targetTodos = todos.filter(todo => todo.isDone);
+				break;
+			}
+		}
+		return targetTodos.length <= 0 ? null : targetTodos;
+	}
 
 	return (
-		<ScrollLayout>
+		<TodoListLayout>
+			{getTargetTodos('TODAY') &&
 			<FilteredListBox>
-				<FilteredListTitle>오늘</FilteredListTitle>
+				<TodoListTitle>오늘</TodoListTitle>
 				<ul>
-					{todos.map(todo => {
-						if(!todo.isDone && getDaysPassed(new Date()) === getDaysPassed(todo.date)) {
-							return <TodoItem todo={todo} key={todo.id}></TodoItem>
-						}
+					{getTargetTodos('TODAY')?.map(todo => {
+						return <TodoItem todo={todo} key={todo.id}></TodoItem>
 					})}
 				</ul>
-			</FilteredListBox>
-			<FilteredListBox>
-				<FilteredListTitle>다음</FilteredListTitle>
-				<ul>
-					{todos.map(todo => {
-						if(!todo.isDone && getDaysPassed(todo.date) > 0) {
-							return <TodoItem todo={todo} key={todo.id}></TodoItem>
-						}
-					})}
-				</ul>
-			</FilteredListBox>
-			<FilteredListBox>
-				<FilteredListTitle>지난</FilteredListTitle>
-				<ul>
-					{todos.map(todo => {
-							if(!todo.isDone && getDaysPassed(todo.date) < 0) {
-								return <TodoItem todo={todo} key={todo.id}></TodoItem>
-							}
-						})}
-				</ul>
-			</FilteredListBox>
-			{toggle.checked &&
+			</FilteredListBox>}
+			{getTargetTodos('NEXT') &&
 				<FilteredListBox>
-					<FilteredListTitle>완료된</FilteredListTitle>
+				<TodoListTitle>다음</TodoListTitle>
+				<ul>
+					{getTargetTodos('NEXT')?.map(todo => {
+						return <TodoItem todo={todo} key={todo.id}></TodoItem>
+					})}
+				</ul>
+			</FilteredListBox>}
+			{getTargetTodos('PASSED') &&
+				<FilteredListBox>
+				<TodoListTitle>지난</TodoListTitle>
+				<ul>
+					{getTargetTodos('PASSED')?.map(todo => {
+						return <TodoItem todo={todo} key={todo.id}></TodoItem>
+					})}
+				</ul>
+			</FilteredListBox>}
+			{getTargetTodos('DONE') && toggle.checked &&
+				<FilteredListBox>
+					<TodoListTitle>완료된</TodoListTitle>
 					<ul>
-						{todos.map(todo => {
-							if(todo.isDone) {
-								return <TodoItem todo={todo} key={todo.id}></TodoItem>
-							}
+						{getTargetTodos('DONE')?.map(todo => {
+							return <TodoItem todo={todo} key={todo.id}></TodoItem>
 						})}
 					</ul>
 				</FilteredListBox>
 			}
-		</ScrollLayout>
+		</TodoListLayout>
 	);
 }
