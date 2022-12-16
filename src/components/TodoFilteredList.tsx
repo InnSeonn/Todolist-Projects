@@ -3,15 +3,14 @@ import { getDaysPassed } from './dateFormatter';
 import TodoItem from './TodoItem';
 import styled from 'styled-components';
 import { useToggleState } from '../contexts/ToggleContext';
-import { useEffect, useState } from 'react';
-import { TodoListLayout, TodoListBox, TodoListTitle } from './TodoList';
+import { TodoListLayout, TodoListBox, TodoListTitle, getSortedTodos } from './TodoList';
 
 const FilteredListBox = styled(TodoListBox)<{display?: string}>`
 	display: ${(props) => props.display || 'block'};
 `;
 
 export default function TodoFilteredList() {
-	const todos = useTodoState();
+	const todos = getSortedTodos(useTodoState());
 	const toggle = useToggleState();
 
 	function getTargetTodos(target: string): TodoState | null {
