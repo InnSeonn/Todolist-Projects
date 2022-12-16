@@ -9,6 +9,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useToggleState } from '../contexts/ToggleContext';
 import { useNewTodoState } from '../contexts/NewTodoContext';
 import { vibration } from './Header';
+import ModalPortal from './ModalPortal';
 
 //style
 export const TodoItemLayout = styled.li`
@@ -94,68 +95,10 @@ const TodoDatePickerBox = styled.div`
 	margin-top: 0.2em;
 	margin-left: 1.475rem;
 	z-index: 1;
-	&.focus {
-		z-index: 999;
-	}
 	@media screen and (min-width: 768px) {
 		width: 10em;
 		margin: 0;
 		text-align: right;
-	}
-
-	.react-datepicker {
-		border-color: var(--color-grey-light);
-		font-family: 'Pretendard';
-	
-		&__header {
-			border: none;
-			background-color: #fff;
-			font-size: var(--font-size-16);
-		}
-	
-		&__day {
-			margin: 0.5em;
-			&-name {
-				margin: 0.5em;
-			}
-			&--today {
-				color: var(--color-accent);
-			}
-			&--selected {
-				background-color: var(--color-primary);
-				color: #fff;
-			}
-		}
-	
-		&__current-month {
-			padding: 0.5em 0;
-			font-size: var(--font-size-16);
-		}
-	
-		&__month {
-			margin: 1em;
-			margin-top: 0.4em;
-			font-size: var(--font-size-16);
-		}
-	
-		&__navigation {
-			top: 10px;
-			&-icon::before {
-				border-width: 2px 2px 0 0;
-				width: 6px;
-				height: 6px;
-			}
-		}
-	
-		&-popper {
-			// z-index: 999 !important;
-			.react-datepicker__triangle::after {
-				border-bottom-color: #fff;
-			}
-			.react-datepicker__triangle::before {
-				border-bottom-color: var(--color-grey-light);
-			}
-		}
 	}
 `;
 const TodoItemDateButton = styled.button`
@@ -310,14 +253,6 @@ export default function TodoItem({ todo }: TodoProps) {
 		}
 	}
 
-	/** DatePicker 최상단 레이어에 표시하기 */
-	function setZindex(e: React.MouseEvent) {
-		const boxes = document.querySelectorAll(TodoDatePickerBox) as NodeListOf<HTMLElement>;
-		Array.from(boxes).find(box => box.classList.contains('focus'))?.classList.remove('focus');
-		const elem = e.currentTarget as HTMLElement;
-		elem.classList.add('focus');
-	}
-
 	return (
 		<TodoItemLayout data-id={id} style={{display: `${display ? 'block' : 'none'}`}}>
 			<TodoItemForm action='#'>
@@ -327,8 +262,8 @@ export default function TodoItem({ todo }: TodoProps) {
 					<TodoItemTextarea rows={1} placeholder='할 일을 작성해 보세요!' onKeyDown={checkKeyDown} onBlur={checkEditedText} onChange={editTodoText} value={todoText} ref={textRef} readOnly={isDone ? true : false} disabled={isDone ? true : false} spellCheck={false}/>
 				</TodoItemRow>
 				<TodoItemDeleteButton type='button' onClick={deleteTodoItem}><RiDeleteBin6Line/></TodoItemDeleteButton>
-				<TodoDatePickerBox onClick={setZindex}>
-					<DatePicker selected={date} onChange={dateChangeHandler} locale={ko} disabledKeyboardNavigation
+				<TodoDatePickerBox>
+					<DatePicker selected={date} onChange={dateChangeHandler} locale={ko} disabledKeyboardNavigation popperContainer={ModalPortal} popperPlacement={'bottom'}
 						customInput={<TodoItemDateButton type='button'>{dateFormatter(date)}</TodoItemDateButton>} disabled={isDone ? true : false}>
 					</DatePicker>
 				</TodoDatePickerBox>
