@@ -208,7 +208,8 @@ export default function TodoItem({ todo }: TodoProps) {
 	const toggle = useToggleState();
 	const [display, setDisplay] = useState(toggle.checked);
 	const newTodo = useNewTodoState();
-	
+	const [windowWidth, setWindowWidth] = useState(0);
+
 	/* 토글 버튼 활성화 체크 */
 	useEffect(() => {
 		if(isDone && toggle.checked) { //체크된 항목이고, 체크된 항목을 표시하는 경우
@@ -220,6 +221,11 @@ export default function TodoItem({ todo }: TodoProps) {
 		}
 	}, [toggle.checked]);
 
+	/* window resize 이벤트 리스너 등록 */
+	useEffect(() => {
+		window.addEventListener('resize', () => setWindowWidth(window.innerWidth));
+	}, []);
+
 	/* 할 일 텍스트 입력창 높이 설정 */
 	useEffect(() => {
 		document.fonts.ready.then(() => { //폴백 폰트와 크기 차이로 인해 scrollHeight가 정확하지 않은 문제 해결
@@ -228,7 +234,7 @@ export default function TodoItem({ todo }: TodoProps) {
 				textRef.current.style.height = textRef.current.scrollHeight + 'px';
 			}
 		});
-	}, [display]);
+	}, [display, windowWidth]);
 
 	/* 새로운 할 일인지 체크 */
 	useEffect(() => {
