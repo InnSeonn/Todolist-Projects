@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components';
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { Todo, useTodoDispatch, useTodoState } from '../contexts/TodoContext';
-import { dateFormatter } from './dateFormatter';
+import { dateFormatter, getDaysPassed } from './dateFormatter';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -37,20 +37,23 @@ const TodoItemForm = styled.form`
 		flex-wrap: nowrap;
 	}
 `;
-const TodoItemCheckbox = styled.label`
+const TodoItemCheckbox = styled.label<{dday: string}>`
 	display: block;
 	width: 0.875rem;
 	height: 0.875rem;
 	margin-right: 0.5rem;
 	border-radius: 50%;
 	border: 1px solid var(--color-grey-light);
+	${(props) => props.dday === '오늘' && css`
+		background-color: #e3e9ff82;
+	`};
 	cursor: pointer;
 	&:hover {
 		background-color: var(--color-primary);
 		transition: background-color 0.3s;
 	}
 `;
-const TodoItemTextarea = styled.textarea`
+const TodoItemTextarea = styled.textarea<{dday: number}>`
 	overflow: hidden;
 	flex: 1;
 	width: 100%;
@@ -62,6 +65,7 @@ const TodoItemTextarea = styled.textarea`
 	// font-variation-settings: 'wght' 510;
 	line-height: 1.5;
 	word-break: break-all;
+	opacity: ${(props) => props.dday < 0 ? '0.5' : '1'};
 	resize: none;
 	&::placeholder {
 		color: var(--color-grey-light);
@@ -150,6 +154,8 @@ export default function TodoItem({ todo }: TodoProps) {
 	const [todoText, setTodoText] = useState(text);
 	const newTodo = useNewTodoState();
 	const [windowWidth, setWindowWidth] = useState(0);
+	const formattedDate = useMemo(() => dateFormatter(date), [date]);
+	const daysPassed = useMemo(() => getDaysPassed(date), [date]);
 
 	/* window resize 이벤트 리스너 등록 */
 	useEffect(() => {
@@ -234,7 +240,7 @@ export default function TodoItem({ todo }: TodoProps) {
 			return ;
 		} else {
 			updateTodoItem();
-			if(newTodo.isNew > 0 && newTodo.isNew === id) {
+			if(newTodo.isNew >= 0 && newTodo.isNew === id) {
 				newTodo.setIsNew(-1);
 			}
 		}
@@ -245,13 +251,13 @@ export default function TodoItem({ todo }: TodoProps) {
 			<TodoItemForm action='#'>
 				<TodoItemRow className={isDone ? 'checked' : ''}>
 					<input type='checkbox' id={`check${id}`} style={{display: 'none'}} checked={isDone} onChange={toggleTodoCheck}/>
-					<TodoItemCheckbox htmlFor={`check${id}`}></TodoItemCheckbox>
-					<TodoItemTextarea rows={1} placeholder='할 일을 작성해 보세요!' onKeyDown={checkKeyDown} onBlur={checkEditedText} onChange={editTodoText} value={todoText} ref={textRef} readOnly={isDone ? true : false} disabled={isDone ? true : false} spellCheck={false}/>
+					<TodoItemCheckbox htmlFor={`check${id}`} dday={formattedDate}></TodoItemCheckbox>
+					<TodoItemTextarea rows={1} placeholder='할 일을 작성해 보세요!' onKeyDown={checkKeyDown} onBlur={checkEditedText} onChange={editTodoText} value={todoText} ref={textRef} readOnly={isDone ? true : false} disabled={isDone ? true : false} spellCheck={false} dday={daysPassed}/>
 				</TodoItemRow>
 				<TodoItemDeleteButton type='button' onClick={deleteTodoItem}><RiDeleteBin6Line/></TodoItemDeleteButton>
 				<TodoDatePickerBox>
 					<DatePicker selected={date} onChange={dateChangeHandler} locale={ko} disabledKeyboardNavigation popperContainer={ModalPortal} popperPlacement={'bottom'}
-						customInput={<TodoItemDateButton type='button'>{dateFormatter(date)}</TodoItemDateButton>} disabled={isDone ? true : false}>
+						customInput={<TodoItemDateButton type='button'>{formattedDate}</TodoItemDateButton>} disabled={isDone ? true : false}>
 					</DatePicker>
 				</TodoDatePickerBox>
 			</TodoItemForm>

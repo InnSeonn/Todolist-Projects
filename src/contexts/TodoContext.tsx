@@ -1,6 +1,5 @@
 import { createContext, Dispatch, useReducer, useContext } from 'react';
-import styled from 'styled-components';
-import TodoList from '../components/TodoList';
+import { today } from '../components/dateFormatter';
 
 export type Todo = {
   id: number;
@@ -11,8 +10,8 @@ export type Todo = {
 export type TodoState = Todo[];
 export const tempTodo: TodoState = [{
   id: 0,
-  text: '텍스트를 클릭하여 할 일을 수정하세요',
-  date: new Date(),
+  text: '',
+  date: today.getToday(),
   isDone: false,
 }];
 export const TodoStateContext = createContext<TodoState | undefined>(undefined);

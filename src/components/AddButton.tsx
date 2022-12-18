@@ -3,6 +3,7 @@ import { GoPlus } from 'react-icons/go';
 import { useTodoState, useTodoDispatch } from '../contexts/TodoContext';
 import { useNewTodoState } from '../contexts/NewTodoContext';
 import { TodoItemLayout } from './TodoItem';
+import { today } from './dateFormatter';
 
 const Button = styled.button`
   position: relative;
@@ -26,7 +27,7 @@ export default function AddButton() {
   const newTodo = useNewTodoState();
   
 	function addNewTodoItem() {
-    if(newTodo.isNew > 0) { //새로운 할 일이 이미 추가 되어있는 상태
+    if(newTodo.isNew >= 0) { //새로운 할 일이 이미 추가 되어있는 상태
       const todoItems = [...document.querySelectorAll(TodoItemLayout)] as HTMLElement[];
       const newItem = todoItems.find(todo => Number(todo.dataset.id) === todos[todos.length - 1].id);
 
@@ -40,7 +41,7 @@ export default function AddButton() {
 
 		dispatch({
 			type: 'CREATE',
-      date: new Date(),
+      date: today.getToday(),
 		});
     newTodo.setIsNew(todos.length === 0 ? 0 : todos[todos.length - 1].id + 1);
 	}

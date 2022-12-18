@@ -22,7 +22,10 @@ export const TodoListLayout = styled.div`
 	}
 `;
 export const TodoListBox = styled.div`
-	margin-top: 3em;
+	margin-top: 2em;
+	&:first-child {
+		margin-top: 0;
+	}
 `;
 export const TodoListTitle = styled.h2`
 	color: var(--color-accent-light);
@@ -30,7 +33,7 @@ export const TodoListTitle = styled.h2`
 	font-weight: 700;
 `;
 
-function getSortedTodos(todos: TodoState) {
+export function getSortedTodos(todos: TodoState) {
 	let daysPassed = new Set(); //중복값 제거
 	todos.map(v => daysPassed.add(getDaysPassed(v.date)));
 
