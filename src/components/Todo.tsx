@@ -20,7 +20,7 @@ export default function Todo() {
   const toggle = useToggleState();
 
   return (
-    <TodoArticle className='list'>
+    <TodoArticle>
       <TodoToggleButton />
       {toggle.filter ? <TodoFilteredList /> : <TodoList />}
     </TodoArticle>

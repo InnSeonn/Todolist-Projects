@@ -1,4 +1,4 @@
-import { createContext, Dispatch, useState, useContext, useReducer } from 'react';
+import { createContext, Dispatch, useContext, useReducer } from 'react';
 
 type ToggleState = {
 	filter: boolean,
@@ -43,7 +43,6 @@ function toggleReducer(state: ToggleState, action: Action) :ToggleState {
 }
 
 export default function ToggleProvider({children}: {children: React.ReactNode}) {
-	// const [toggle, dispatch] = useState(true);
 	const [toggle, dispatch] = useReducer(toggleReducer, {
 		filter: true,
 		checked: true,

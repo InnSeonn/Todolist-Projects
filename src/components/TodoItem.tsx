@@ -6,7 +6,6 @@ import { dateFormatter, getDaysPassed } from './dateFormatter';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useToggleState } from '../contexts/ToggleContext';
 import { useNewTodoState } from '../contexts/NewTodoContext';
 import { vibration } from './Header';
 import ModalPortal from './ModalPortal';
