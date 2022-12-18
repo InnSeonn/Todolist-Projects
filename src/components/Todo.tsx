@@ -12,7 +12,7 @@ const TodoArticle = styled.article`
   flex-direction: column;
   max-width: var(--max-width);
   width: 100%;
-  padding: 3em 0.5em 4em 2em;
+  padding: 3em 0.5em 3em 2em;
   background: #fff;
 `;
 

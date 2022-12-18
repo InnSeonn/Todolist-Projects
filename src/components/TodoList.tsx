@@ -5,15 +5,16 @@ import { getDaysPassed } from './dateFormatter';
 import { useToggleState } from '../contexts/ToggleContext';
 
 export const TodoListLayout = styled.div`
-  overflow: auto;
+  overflow-y: scroll;
 	padding-right: 1.5em;
+	padding-bottom: 1em;
 	&::-webkit-scrollbar {
 		width: 4px;
 		height: 4px;
 
 		&-track {
 			border-radius: 4px;
-			background-color: rgba(227, 233, 255, 0.5);
+			background-color: transparent;
 		}
 		&-thumb {
 			border-radius: 4px;

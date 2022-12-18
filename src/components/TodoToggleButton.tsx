@@ -3,7 +3,10 @@ import { BiCategory } from 'react-icons/bi';
 import { MdChecklist } from 'react-icons/md';
 import { useToggleDispatch, useToggleState } from '../contexts/ToggleContext';
 
-const Button = styled.button`
+const ToggleButtonLayout = styled.div`
+  padding-bottom: 1em;
+`;
+const ToggleButton = styled.button`
   margin-right: 1em;
   color: var(--color-primary-dark);
   font-size: var(--font-size-16);
@@ -20,24 +23,6 @@ const Button = styled.button`
 export default function TodoToggleButton() {
 	const toggle = useToggleState();
 	const dispatch = useToggleDispatch();
-
-	function toggleShowChecked(e: React.MouseEvent) {
-    const toggleBtn = e.currentTarget;
-    toggleBtn.classList.toggle('on');
-		dispatch({
-      type: 'CHECKED',
-      toggle: !toggle.checked,
-    });
-  }
-
-  function toggleFilter(e: React.MouseEvent) {
-    const toggleBtn = e.currentTarget;
-    toggleBtn.classList.toggle('on');
-		dispatch({
-      type: 'FILTER',
-      toggle: !toggle.filter,
-    });
-  }
 
   function toggleOption(e: React.MouseEvent) {
     const toggleBtn = e.currentTarget;
@@ -56,9 +41,9 @@ export default function TodoToggleButton() {
   }
 
 	return (
-		<div>
-			<Button className='filter on' onClick={toggleOption}><BiCategory/></Button>
-			<Button className='checked on' onClick={toggleOption}><MdChecklist/></Button>
-		</div>
+		<ToggleButtonLayout>
+			<ToggleButton className='filter on' onClick={toggleOption}><BiCategory/></ToggleButton>
+			<ToggleButton className='checked on' onClick={toggleOption}><MdChecklist/></ToggleButton>
+		</ToggleButtonLayout>
 	);
 }
