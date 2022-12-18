@@ -1,4 +1,3 @@
-import './App.css';
 import styled from 'styled-components';
 import GlobalStyle from './components/GlobalStyle';
 import Todo from './components/Todo';
