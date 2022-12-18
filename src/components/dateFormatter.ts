@@ -13,17 +13,14 @@ export function getDaysPassed(date: Date) {
 }
 
 export function dateFormatter(selectedDate: Date): string {
+	const timeFormatter = new Intl.DateTimeFormat('ko', { dateStyle: 'long'});
 	const formatter = new Intl.RelativeTimeFormat('ko', { numeric: 'auto'});
 	const daysPassed = getDaysPassed(selectedDate);
 
-	let formatted = '';
 	if(Math.abs(daysPassed) > 7) { //7일 전(후)부터는 날짜로 표시
 		const selectedYear = selectedDate.getFullYear();
-		const year = today.year === selectedYear ? '' : selectedYear.toString().substring(2, 4) + '년 '; //올해는 연도 생략
-		formatted = `${year}${selectedDate.getMonth() + 1}월 ${selectedDate.getDate()}일`;
+		return today.year === selectedYear ? timeFormatter.format(selectedDate).substring(6) : timeFormatter.format(selectedDate);
 	} else {
-		formatted = formatter.format(daysPassed, 'day');
+		return formatter.format(daysPassed, 'day');
 	}
-
-	return formatted;
 }
