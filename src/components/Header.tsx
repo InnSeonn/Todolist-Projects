@@ -44,8 +44,9 @@ function getTitle(): string {
 const MAXLENGHT = 25;
 
 export default function Header() {
+	const localTitle = getTitle();
 	const textRef = useRef<HTMLInputElement>(null);
-	const [title, setTitle] = useState<string>(getTitle());
+	const [title, setTitle] = useState<string>(localTitle);
 
 	function editTitle() {
 		if(textRef.current !== null) {
@@ -61,9 +62,10 @@ export default function Header() {
 
 	function updateTitle(e: React.FormEvent | React.FocusEvent) {
 		e.preventDefault();
-		if(textRef.current !== null) {
-			window.localStorage.setItem('todoTitle', textRef.current.value);
+		if(title === localTitle || title === '') {
+			return ;
 		}
+		window.localStorage.setItem('todoTitle', title);
 	}
 
 	function checkKeyDown(e: React.KeyboardEvent) {
@@ -75,7 +77,7 @@ export default function Header() {
 	return (
 		<HeaderLayout className='header'>
 			<HeaderForm action='#' onSubmit={updateTitle}>
-				<HeaderInput type='text' placeholder='할 일을 미루지 말자' maxLength={MAXLENGHT} ref={textRef} onChange={editTitle} onBlur={updateTitle} onKeyDown={checkKeyDown} value={title} spellCheck={false}/>
+				<HeaderInput type='text' placeholder={localTitle.trim() === '' ? '타이틀을 작성해보세요 : 할 일을 미루지 말자' : localTitle} maxLength={MAXLENGHT} ref={textRef} onChange={editTitle} onBlur={updateTitle} onKeyDown={checkKeyDown} value={title} spellCheck={false}/>
 			</HeaderForm>
 		</HeaderLayout>
 	);

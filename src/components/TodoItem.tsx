@@ -235,7 +235,7 @@ export default function TodoItem({ todo }: TodoProps) {
 
 	/** 할 일이 수정되었는지 확인 */
 	function checkEditedText() {
-		if(textRef.current?.value === '' || textRef.current?.value === text) {
+		if(todoText === text || todoText === '') {
 			return ;
 		} else {
 			updateTodoItem();
@@ -251,7 +251,7 @@ export default function TodoItem({ todo }: TodoProps) {
 				<TodoItemRow className={isDone ? 'checked' : ''}>
 					<input type='checkbox' id={`check${id}`} style={{display: 'none'}} checked={isDone} onChange={toggleTodoCheck}/>
 					<TodoItemCheckbox htmlFor={`check${id}`} dday={formattedDate}></TodoItemCheckbox>
-					<TodoItemTextarea rows={1} placeholder='할 일을 작성해 보세요!' onKeyDown={checkKeyDown} onBlur={checkEditedText} onChange={editTodoText} value={todoText} ref={textRef} readOnly={isDone ? true : false} disabled={isDone ? true : false} spellCheck={false} dday={daysPassed}/>
+					<TodoItemTextarea rows={1} placeholder={text.trim() === '' ? '할 일을 작성해 보세요!' : text} onKeyDown={checkKeyDown} onBlur={checkEditedText} onChange={editTodoText} value={todoText} ref={textRef} readOnly={isDone ? true : false} disabled={isDone ? true : false} spellCheck={false} dday={daysPassed}/>
 				</TodoItemRow>
 				<TodoItemDeleteButton type='button' onClick={deleteTodoItem}><RiDeleteBin6Line/></TodoItemDeleteButton>
 				<TodoDatePickerBox>
