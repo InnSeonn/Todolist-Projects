@@ -6,7 +6,7 @@ type ToggleState = {
 };
 
 export const ToggleContext = createContext<ToggleState>({
-	filter: true,
+	filter: false,
 	checked: true,
 });
 
@@ -44,7 +44,7 @@ function toggleReducer(state: ToggleState, action: Action) :ToggleState {
 
 export default function ToggleProvider({children}: {children: React.ReactNode}) {
 	const [toggle, dispatch] = useReducer(toggleReducer, {
-		filter: true,
+		filter: false,
 		checked: true,
 	});
 

@@ -42,7 +42,7 @@ export default function TodoToggleButton() {
 
 	return (
 		<ToggleButtonLayout>
-			<ToggleButton className='filter on' onClick={toggleOption}><BiCategory/></ToggleButton>
+			<ToggleButton className='filter' onClick={toggleOption}><BiCategory/></ToggleButton>
 			<ToggleButton className='checked on' onClick={toggleOption}><MdChecklist/></ToggleButton>
 		</ToggleButtonLayout>
 	);
