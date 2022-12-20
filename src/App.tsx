@@ -26,8 +26,8 @@ const AppBox = styled.div`
     background-color: var(--color-bg);
   }
   @media screen and (min-width: 768px) {
-    padding: 5vh 20px;
-    padding-bottom: calc(5vh - 2.8em);
+    padding: 5% 20px;
+    padding-bottom: calc(5% - 2.8em);
   }
 `;
 

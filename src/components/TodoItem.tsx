@@ -47,9 +47,11 @@ const TodoItemCheckbox = styled.label<{dday: string}>`
 		background-color: #e3e9ff82;
 	`};
 	cursor: pointer;
-	&:hover {
-		background-color: var(--color-primary);
-		transition: background-color 0.3s;
+	@media (hover: hover) and (pointer: fine) {
+		&:hover {
+			background-color: var(--color-primary);
+			transition: background-color 0.3s;
+		}
 	}
 `;
 const TodoItemTextarea = styled.textarea<{dday: number}>`
@@ -125,9 +127,11 @@ const TodoItemDeleteButton = styled.button`
 	height: 100%;
 	margin-left: 3em;
 	color: var(--color-grey-light);
-	&:hover {
-		color: var(--color-accent-light);
-		transition: color 0.3s;
+	@media (hover: hover) and (pointer: fine) {
+		&:hover {
+			color: var(--color-accent-light);
+			transition: color 0.3s;
+		}
 	}
 	svg {
 		width: 1.25rem;
