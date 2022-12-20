@@ -6,10 +6,11 @@ import Header from './components/Header';
 import AddButton from './components/AddButton';
 import ToggleProvider from './contexts/ToggleContext';
 import { NewTodoContextProvider } from './contexts/NewTodoContext';
+import { useEffect } from 'react';
 
 const AppLayout = styled.div`
   overflow: hidden;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
 `;
 const AppBox = styled.div`
   display: flex;
@@ -31,6 +32,13 @@ const AppBox = styled.div`
 `;
 
 function App() {
+  useEffect(() => {
+    window.addEventListener('resize', () => { //모바일 웹 상하단바 크기 제외
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    })
+  }, []);
+
   return (
     <AppLayout className='App'>
       <GlobalStyle />
