@@ -33,21 +33,26 @@ const AppBox = styled.div`
 
 function App() {
   useEffect(() => {
-    window.addEventListener('resize', () => { //모바일 웹 상하단바 크기 제외
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    })
+    //모바일 웹 상하단바 크기 제외
+    setViewHeight();
+    window.addEventListener('resize', setViewHeight);
+    return () => window.removeEventListener('resize', setViewHeight);
   }, []);
+
+  const setViewHeight = () => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  };
 
   return (
     <AppLayout className='App'>
       <GlobalStyle />
       <AppBox>
-        <Header/>
+        <Header />
         <TodoContextProvider>
           <NewTodoContextProvider>
             <ToggleProvider>
-              <Todo/>
+              <Todo />
             </ToggleProvider>
             <AddButton />
           </NewTodoContextProvider>
