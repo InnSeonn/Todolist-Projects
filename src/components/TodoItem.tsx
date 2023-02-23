@@ -38,9 +38,9 @@ const TodoItemForm = styled.form`
 `;
 const TodoItemCheckbox = styled.label<{dday: string}>`
 	display: block;
-	width: 0.875rem;
-	height: 0.875rem;
-	margin-right: 0.5rem;
+	width: 1rem;
+	height: 1rem;
+	margin-right: 0.8rem;
 	border-radius: 50%;
 	border: 1px solid var(--color-grey-light);
 	${(props) => props.dday === '오늘' && css`

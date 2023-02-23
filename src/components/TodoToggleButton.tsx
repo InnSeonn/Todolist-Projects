@@ -7,13 +7,14 @@ const ToggleButtonLayout = styled.div`
   padding-bottom: 1em;
 `;
 const ToggleButton = styled.button`
-  margin-right: 1em;
+  margin-right: 0.8em;
   color: var(--color-primary-dark);
-  font-size: var(--font-size-16);
+  font-size: 1.375rem;
   opacity: 0.5;
   svg {
-    width: 1.25rem;
-    height: 1.25rem;
+    display: block;
+    width: 1.375rem;
+    height: 1.375rem;
   }
   &.on {
     opacity: 1;

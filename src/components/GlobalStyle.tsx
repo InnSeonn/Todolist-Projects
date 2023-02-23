@@ -33,6 +33,10 @@ const GlobalStyle = createGlobalStyle`
 		font-family: inherit;
 		letter-spacing: 0.05em;
 	}
+	body, html {
+		overflow: hidden;
+		overscroll-behavior: none;
+	}
 	body {
 		margin: 0;
 		font-size: 16px;
