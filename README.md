@@ -24,6 +24,11 @@
 
 <br/>
 
+## ✨ 배포사이트
+https://inn-todolist.vercel.app/
+
+<br/>
+
 ## ⏱ 개발 기간
 22년 12월 1일 - 22년 12월 19일
 
@@ -34,7 +39,7 @@
 
 - **`React`** : useEffect, useRef, useState, useMemo 등 React Hooks을 활용하여 할 일이 추가, 수정, 삭제되면 리렌더링을 통해 관련 요소에 동시적으로 UI 업데이트가 이루어지도록 했습니다.
 - **`Typescript`** : 타입을 명시하여 코드 작성 단계에서 버그를 예방하고 변수나 함수 등의 목적을 명확하게 하여 안전한 코드를 작성할 수 있도록 했습니다.
-- **`Styled-Components`*** **`HTML5`** : JSX를 사용하는 리액트의 특성을 살려 CSS-in-JS 방식의 styled-components를 사용하여 컴포넌트의 구조, 기능, 디자인을 하나의 파일로 파악할 수 있도록 했습니다.
+- **`Styled-Components`**, **`HTML5`** : JSX를 사용하는 리액트의 특성을 살려 CSS-in-JS 방식의 styled-components를 사용하여 컴포넌트의 구조, 기능, 디자인을 하나의 파일로 파악할 수 있도록 했습니다.
 - **`Context API`** : 대부분의 컴포넌트에서 접근하는 ‘할 일 · 새로운 할 일 · 토글 버튼 상태’ 데이터를 효율적으로 다루기 위해 context API를 사용했습니다.
 - **`LocalStorage`** : 할 일 데이터와 제목을 로컬스토로지에 저장했습니다.
 - **`React-Datepicker`** : UI 수정이 쉬운 react-datepicker 라이브러리를 사용하여 직관적이고 간편하게 날짜를 선택할 수 있게 했습니다.
